@@ -1,0 +1,21 @@
+type Mutation {
+  sendEmail(
+    params: EmailInput!
+  ): EmailOutput
+}
+
+input EmailInput {
+  subject: String!
+  from_email: String!
+  from_name: String!
+  to_email: String!
+  to_name: String!
+  content: String!
+}
+
+type EmailOutput {
+  response: jsonb
+}
+
+scalar jsonb
+

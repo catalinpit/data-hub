@@ -1,0 +1,48 @@
+actions:
+- name: send_email
+  definition:
+    kind: synchronous
+    handler: https://api.sendgrid.com/v3/mail/send
+    forward_client_headers: true
+    headers:
+    - name: Authorization
+      value_from_env: SENDGRID_API_KEY
+    request_transform:
+      body: |-
+        {
+          "subject": {{$body.input.params.subject}},
+          "personalizations": [
+            {
+              "to": [
+                {
+                  "email": {{$body.input.params.to_email}},
+                  "name": {{$body.input.params.to_name}}
+                }
+              ]
+            }
+          ],
+          "from": {
+            "email": {{$body.input.params.from_email}},
+            "name": {{$body.input.params.from_name}}
+          },
+          "reply_to": {
+            "email": {{$body.input.params.from_email}},
+            "name": {{$body.input.params.from_name}}
+          },
+          "content": [
+            {
+              "type": "text/plain",
+              "value": {{$body.input.params.content}}
+            }
+          ]
+        }
+      content_type: application/json
+      template_engine: Kriti
+custom_types:
+  enums: []
+  input_objects:
+  - name: EmailInput
+  objects:
+  - name: EmailOutput
+  scalars:
+  - name: jsonb
